@@ -1,12 +1,14 @@
 :root {
-    --primary-color: #27173e;
-    /* Truist Purple */
+    --primary-color: #5E278B;
+    /* Truist Purple - matching CLI header */
     --accent-color: #a665e6;
     /* Lighter Purple */
-    --bg-color: #f4f5f7;
+    --bg-color: #F5F0FA;
+    /* Light beige/cream background - matching CLI */
     --card-bg: #ffffff;
     --text-color: #333333;
-    --border-color: #e0e0e0;
+    --border-color: #D1C4E9;
+    /* Light purple border */
     --success-color: #2e7d32;
     --error-color: #d32f2f;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -40,31 +42,33 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 15px 25px;
     margin-bottom: 20px;
-    border-bottom: 2px solid var(--primary-color);
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    color: var(--primary-color);
+    color: #ffffff;
     font-weight: 700;
     font-size: 1.8rem;
 }
 
 .highlight {
-    color: var(--accent-color);
+    color: #ffffff;
 }
 
 .subtitle {
-    color: #666;
+    color: #e0e0e0;
     font-size: 0.9rem;
 }
 
 /* Layout */
 .main-grid {
     display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 20px;
+    grid-template-columns: var(--config-width, 350px) auto 1fr;
+    gap: 0;
     flex: 1;
     overflow: hidden;
     /* Prevent body scroll if results scroll */
@@ -74,9 +78,8 @@ body {
 .card {
     background: var(--card-bg);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(39, 23, 62, 0.08);
-    border: 1px solid rgba(114, 47, 224, 0.2);
-    /* Subtle purple border */
+    box-shadow: 0 2px 8px rgba(94, 39, 139, 0.08);
+    border: 1px solid var(--border-color);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -100,20 +103,20 @@ body {
 /* Form Elements */
 .config-panel {
     overflow-y: auto;
+    margin-right: 0;
 }
 
 .input-group {
     margin-bottom: 15px;
     padding: 12px;
-    border: 1px solid rgba(114, 47, 224, 0.15);
-    /* Very subtle purple border */
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: #fafafa;
     transition: border-color 0.2s ease;
 }
 
 .input-group:hover {
-    border-color: rgba(114, 47, 224, 0.3);
+    border-color: rgba(94, 39, 139, 0.4);
     /* Slightly more visible on hover */
 }
 
@@ -193,6 +196,7 @@ textarea:focus {
     min-height: 0;
     /* Crucial for nested flex scrolling */
     height: 100%;
+    margin-left: 0;
 }
 
 .results-container {
@@ -204,18 +208,17 @@ textarea:focus {
 
 .result-item {
     background-color: white;
-    border: 1px solid rgba(114, 47, 224, 0.2);
-    /* Thin, subtle purple border */
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     margin-bottom: 20px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(39, 23, 62, 0.08);
+    box-shadow: 0 2px 8px rgba(94, 39, 139, 0.08);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .result-item:hover {
-    box-shadow: 0 4px 16px rgba(114, 47, 224, 0.15);
-    border-color: rgba(114, 47, 224, 0.35);
+    box-shadow: 0 4px 16px rgba(94, 39, 139, 0.15);
+    border-color: rgba(94, 39, 139, 0.35);
 }
 
 .result-header {
@@ -434,4 +437,47 @@ pre {
 ::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 3px;
+}
+
+/* Resize Handle */
+.resize-handle {
+    width: 8px;
+    cursor: col-resize;
+    background: transparent;
+    position: relative;
+    transition: background-color 0.2s ease;
+    margin: 0 6px;
+}
+
+.resize-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 60px;
+    background: rgba(94, 39, 139, 0.3);
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+.resize-handle:hover::before {
+    background: rgba(94, 39, 139, 0.6);
+    height: 80px;
+    width: 4px;
+}
+
+.resize-handle:active::before {
+    background: var(--primary-color);
+}
+
+body.resizing {
+    cursor: col-resize;
+    user-select: none;
+}
+
+body.resizing .resize-handle::before {
+    background: var(--primary-color);
+    height: 100%;
 }

@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         addTokenBtn.addEventListener('click', () => addRow(tokensTable, ['Token Name', 'Values (semicolon separated)']));
     }
 
+    // -- Resize Handle Logic --
+    initResizeHandle();
+
     // Load defaults on startup
     loadDefaults();
 
@@ -462,5 +465,47 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             return escapeHtml(String(str));
         }
+    }
+
+    function initResizeHandle() {
+        const resizeHandle = document.getElementById('resizeHandle');
+        const configPanel = document.getElementById('configPanel');
+        const mainGrid = document.querySelector('.main-grid');
+
+        if (!resizeHandle || !configPanel || !mainGrid) return;
+
+        let isResizing = false;
+        let startX = 0;
+        let startWidth = 0;
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = configPanel.offsetWidth;
+            document.body.classList.add('resizing');
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const delta = e.clientX - startX;
+            const newWidth = startWidth + delta;
+
+            // Set min and max width constraints
+            const minWidth = 250;
+            const maxWidth = window.innerWidth * 0.6; // Max 60% of window width
+
+            if (newWidth >= minWidth && newWidth <= maxWidth) {
+                mainGrid.style.setProperty('--config-width', `${newWidth}px`);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.classList.remove('resizing');
+            }
+        });
     }
 });
