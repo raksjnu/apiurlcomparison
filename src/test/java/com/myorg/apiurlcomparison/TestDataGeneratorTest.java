@@ -30,11 +30,12 @@ public class TestDataGeneratorTest {
 
         List<Map<String, Object>> iterations = TestDataGenerator.generate(tokens, 100, "ONE_BY_ONE");
 
-        // Logic: Iterates each token value.
-        // A: 2 values -> (a1, b1), (a2, b1)
-        // B: 3 values -> (a1, b1), (a1, b2), (a1, b3)
-        // Total = 2 + 3 = 5
-        assertEquals(5, iterations.size());
+        // Logic: Baseline + Unique Deviations
+        // 1. Baseline: (a1, b1)
+        // 2. Token A: (a1 skip), (a2) -> +1
+        // 3. Token B: (b1 skip), (b2, b3) -> +2
+        // Total = 4
+        assertEquals(4, iterations.size());
 
         // Verify duplicates check (just optional, to confirm logic)
         long a1b1 = iterations.stream()
@@ -49,8 +50,9 @@ public class TestDataGeneratorTest {
         tokens.put("A", Arrays.asList("a1", "a2"));
 
         List<Map<String, Object>> iterations = TestDataGenerator.generate(tokens, 100, "ONE_BY_ONE");
+        // Baseline(1) + Val(a2) = 2
         assertEquals(2, iterations.size());
-        assertEquals("a1", iterations.get(0).get("A"));
-        assertEquals("a2", iterations.get(1).get("A"));
+        assertEquals("a1", iterations.get(0).get("A")); // Baseline
+        assertEquals("a2", iterations.get(1).get("A")); // Val 2 (a1 skipped)
     }
 }

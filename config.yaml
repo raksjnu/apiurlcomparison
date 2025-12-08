@@ -6,7 +6,7 @@ testType:  "SOAP" #"SOAP" #"REST" #
 # Configuration block for REST APIs
 rest:
   api1:
-    baseUrl: "http://localhost:8081/api"
+    baseUrl: "http://localhost:8081/api/resource"
     authentication:
       tokenUrl: null
       clientId: rakesh
@@ -19,15 +19,9 @@ rest:
           Content-Type: "application/json"
           Accept: "application/json"
         payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api1\\payload.json"
-      - name: "getAnotherResource"
-        path: "/anotherResource"
-        methods: ["GET"]
-        headers:
-          Accept: "application/json"
-        # No payload needed for GET
-        payloadTemplatePath: null
+      
   api2:
-    baseUrl: "http://localhost:8082/api"
+    baseUrl: "http://localhost:8082/api/resource"
     authentication:
       tokenUrl: null
       clientId: rakesh
@@ -40,14 +34,7 @@ rest:
           Content-Type: "application/json"
           Accept: "application/json"
         payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api2\\payload.json"
-      - name: "getAnotherResource"
-        path: "/anotherResource"
-        methods: ["GET"]
-        headers:
-          Accept: "application/json"
-        # No payload needed for GET
-        payloadTemplatePath: null
-
+      
 # Configuration block for SOAP APIs
 soap:
   api1:
@@ -63,12 +50,7 @@ soap:
           Content-Type: "text/xml;charset=UTF-8"
           SOAPAction: "getAccountDetails"
         payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api1\\payload.xml"
-      - name: "createOrder"
-        methods: ["POST"]
-        headers:
-          Content-Type: "text/xml;charset=UTF-8"
-          SOAPAction: "/Service/orderService.serviceagent/createOrderEndpoint1/Operation"
-        payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api1\\payload3.xml"
+      
   api2:
     baseUrl: "http://localhost:8084/ws/AccountService"
     authentication:
@@ -82,31 +64,20 @@ soap:
           Content-Type: "text/xml;charset=UTF-8"
           SOAPAction: "getAccountDetails"
         payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api2\\payload.xml"
-      - name: "createOrder"
-        methods: ["POST"]
-        headers:
-          Content-Type: "text/xml;charset=UTF-8"
-          SOAPAction: "/Service/orderService.serviceagent/createOrderEndpoint1/Operation"
-        payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api2\\payload3.xml"
-
+      
 # Set the maximum number of iterations to run, as a safeguard.
-maxIterations: 1000
+maxIterations: 100
 
 # Define tokens and the values to iterate over.
 # The tool will generate iterations from all possible combinations (Cartesian product) of the token values provided below.
 tokens:
   account:
-    - "12345"
     - "999"
-    - "0"
-    - -123456
-    - ""
+    - "1000"  
+    - "1001"
   uuid:
-    - "a1b2c3d4-e5f6-7890-1234-567890abcdef"
-    - "f0e9d8c7-b6a5-4321-fedc-ba0987654321"
-  param:
-    - "True"
-    - "False"
+    - "id1"
+    - "id2"
 
 # Iteration Strategy: "ALL_COMBINATIONS" (default) or "ONE_BY_ONE"
 # ONE_BY_ONE: Uses the first value of each token list as a default baseline. 

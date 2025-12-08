@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,19 +30,43 @@ public class PayloadProcessor {
 
     /**
      * Constructor for PayloadProcessor.
-     * @param payloadTemplatePath The path to the payload template file.
-     * @param apiType The type of API ("REST" for JSON, "SOAP" for XML).
-     * @throws IOException If the template file cannot be read.
+     * 
+     * @param payloadTemplatePath The path to the payload template file OR raw
+     *                            content.
+     * @param apiType             The type of API ("REST" for JSON, "SOAP" for XML).
+     * @throws IOException If the input is a file path and cannot be read.
      */
     public PayloadProcessor(String payloadTemplatePath, String apiType) throws IOException {
-        this.templateContent = new String(Files.readAllBytes(Paths.get(payloadTemplatePath)));
         this.apiType = apiType;
+        if (payloadTemplatePath == null) {
+            this.templateContent = "";
+        } else {
+            this.templateContent = loadTemplate(payloadTemplatePath);
+        }
+    }
+
+    private String loadTemplate(String templatePath) throws IOException {
+        try {
+            Path path = Paths.get(templatePath);
+            if (Files.exists(path) && !Files.isDirectory(path)) {
+                return new String(Files.readAllBytes(path));
+            } else {
+                // Assume raw content if file does not exist
+                return templatePath;
+            }
+        } catch (Exception e) {
+            // If Paths.get fails (invalid chars for path), treat as raw content
+            return templatePath;
+        }
     }
 
     /**
      * Processes the template with the given token values for an iteration.
-     * @param iterationTokens A map containing token names and their values for the current iteration.
-     * @return The processed payload as a String, or the original template on failure.
+     * 
+     * @param iterationTokens A map containing token names and their values for the
+     *                        current iteration.
+     * @return The processed payload as a String, or the original template on
+     *         failure.
      */
     public String process(Map<String, Object> iterationTokens) {
         try {
@@ -51,12 +76,16 @@ public class PayloadProcessor {
                 return processJson(iterationTokens);
             }
         } catch (Exception e) {
-            System.err.println("Error processing payload, returning original template. Error: " + e.getMessage());
+            // System.err.println("Error processing payload, returning original template.
+            // Error: " + e.getMessage());
+            // Fail safe: return raw template
             return templateContent;
         }
     }
 
     private String processJson(Map<String, Object> tokens) throws IOException {
+        if (templateContent == null || templateContent.trim().isEmpty())
+            return "";
         JsonNode rootNode = jsonMapper.readTree(templateContent);
         traverseAndReplaceJson(rootNode, tokens);
         return jsonMapper.writeValueAsString(rootNode);
@@ -98,6 +127,8 @@ public class PayloadProcessor {
     }
 
     private String processXml(Map<String, Object> tokens) throws Exception {
+        if (templateContent == null || templateContent.trim().isEmpty())
+            return "";
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(templateContent.getBytes()));

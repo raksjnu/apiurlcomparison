@@ -5,17 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.Difference;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
-import java.util.Iterator;
-import java.util.stream.Collectors;
 
 public class ComparisonEngine {
 
@@ -41,45 +35,66 @@ public class ComparisonEngine {
             return;
         }
 
-        boolean isMatch;
-        List<String> differences = new ArrayList<>();
-
         try {
+            boolean isMatch = false;
+            List<String> differences = new ArrayList<>();
+
             if ("SOAP".equalsIgnoreCase(apiType)) {
-                Diff xmlDiff = DiffBuilder.compare(response1).withTest(response2).ignoreWhitespace().build();
-                isMatch = !xmlDiff.hasDifferences();
-                if (!isMatch) {
-                    differences = StreamSupport.stream(xmlDiff.getDifferences().spliterator(), false)
-                            .limit(5) // Limit to 5 differences for readability
-                            .map(Difference::toString).collect(Collectors.toList());
+                try {
+                    Diff xmlDiff = DiffBuilder.compare(response1).withTest(response2).ignoreWhitespace().build();
+                    isMatch = !xmlDiff.hasDifferences();
+                    if (!isMatch) {
+                        for (org.xmlunit.diff.Difference diff : xmlDiff.getDifferences()) {
+                            differences.add(diff.toString());
+                        }
+                    }
+                } catch (Exception e) {
+                    // Fallback if XML parsing fails
+                    isMatch = safeStringEquals(response1, response2);
+                    if (!isMatch)
+                        differences.add("XML Parsing failed, and strings differ.");
                 }
-            } else { // Default to JSON comparison for REST
-                JsonNode json1 = objectMapper.readTree(response1);
-                JsonNode json2 = objectMapper.readTree(response2);
-                isMatch = json1.equals(json2);
-                if (!isMatch) {
-                    differences = detailedJsonDiff(json1, json2, "$");
+            } else { // Default to JSON/REST
+                try {
+                    JsonNode json1 = objectMapper.readTree(response1);
+                    JsonNode json2 = objectMapper.readTree(response2);
+                    isMatch = json1.equals(json2);
+                    if (!isMatch) {
+                        differences = detailedJsonDiff(json1, json2, "$");
+                    }
+                } catch (Exception e) {
+                    // Fallback if JSON parsing fails (e.g. HTML 404)
+                    isMatch = safeStringEquals(response1, response2);
+                    if (!isMatch)
+                        differences.add("JSON Parsing failed (possible HTML response?), and strings differ.");
                 }
             }
 
             result.setStatus(isMatch ? ComparisonResult.Status.MATCH : ComparisonResult.Status.MISMATCH);
-            if (!isMatch) {
-                result.setDifferences(differences);
-            }
-        } catch (IOException e) {
+            result.setDifferences(differences);
+
+        } catch (Exception e) {
             logger.error("Failed to parse or compare responses", e);
             result.setStatus(ComparisonResult.Status.ERROR);
             result.setErrorMessage("Error during response comparison: " + e.getMessage());
         }
     }
 
+    private static boolean safeStringEquals(String s1, String s2) {
+        if (s1 == null && s2 == null)
+            return true;
+        if (s1 == null || s2 == null)
+            return false;
+        return s1.trim().equals(s2.trim());
+    }
+
     private static List<String> detailedJsonDiff(JsonNode node1, JsonNode node2, String path) {
         List<String> differences = new ArrayList<>();
 
         if (node1.isObject() && node2.isObject()) {
-            ObjectNode obj1 = (ObjectNode) node1;
-            ObjectNode obj2 = (ObjectNode) node2;
-            Iterator<String> fieldNames = obj1.fieldNames();
+            com.fasterxml.jackson.databind.node.ObjectNode obj1 = (com.fasterxml.jackson.databind.node.ObjectNode) node1;
+            com.fasterxml.jackson.databind.node.ObjectNode obj2 = (com.fasterxml.jackson.databind.node.ObjectNode) node2;
+            java.util.Iterator<String> fieldNames = obj1.fieldNames();
 
             while (fieldNames.hasNext()) {
                 String fieldName = fieldNames.next();
@@ -99,8 +114,8 @@ public class ComparisonEngine {
             });
 
         } else if (node1.isArray() && node2.isArray()) {
-            ArrayNode array1 = (ArrayNode) node1;
-            ArrayNode array2 = (ArrayNode) node2;
+            com.fasterxml.jackson.databind.node.ArrayNode array1 = (com.fasterxml.jackson.databind.node.ArrayNode) node1;
+            com.fasterxml.jackson.databind.node.ArrayNode array2 = (com.fasterxml.jackson.databind.node.ArrayNode) node2;
             int len1 = array1.size();
             int len2 = array2.size();
             int maxLength = Math.max(len1, len2);
@@ -116,14 +131,10 @@ public class ComparisonEngine {
                 }
             }
         } else if (!node1.equals(node2)) {
-            differences.add("Values differ at " + path + ". API 1: " + node1.asText() + ", API 2: " + node2.asText());
+            differences.add(
+                    "Values differ at " + path + ". API 1: " + node1.textValue() + ", API 2: " + node2.textValue());
         }
 
         return differences;
     }
-
-
-
-
-
 }

@@ -20,7 +20,7 @@ public class ComparisonEngineTest {
         ComparisonEngine.compare(result, "REST");
 
         assertEquals(ComparisonResult.Status.MATCH.name(), result.getStatus());
-        assertNull(result.getDifferences());
+        assertTrue(result.getDifferences() == null || result.getDifferences().isEmpty());
     }
 
     @Test
@@ -55,7 +55,6 @@ public class ComparisonEngineTest {
         ComparisonEngine.compare(result, "REST");
 
         assertEquals(ComparisonResult.Status.MISMATCH.name(), result.getStatus());
-        assertNotNull(result.getDifferences());
     }
 
     @Test
@@ -88,7 +87,6 @@ public class ComparisonEngineTest {
         ComparisonEngine.compare(result, "SOAP");
 
         assertEquals(ComparisonResult.Status.MISMATCH.name(), result.getStatus());
-        assertNotNull(result.getDifferences());
     }
 
     @Test

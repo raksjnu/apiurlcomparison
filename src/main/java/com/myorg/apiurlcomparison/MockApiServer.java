@@ -194,8 +194,14 @@ public class MockApiServer {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(soapPayload)));
 
-            // Search for "account" tag anywhere
-            NodeList nodes = doc.getElementsByTagName("account");
+            // Search for "AccountNumber" tag (case-sensitive)
+            NodeList nodes = doc.getElementsByTagName("AccountNumber");
+            if (nodes.getLength() > 0) {
+                return nodes.item(0).getTextContent();
+            }
+
+            // Fallback: also try lowercase "account" for compatibility
+            nodes = doc.getElementsByTagName("account");
             if (nodes.getLength() > 0) {
                 return nodes.item(0).getTextContent();
             }

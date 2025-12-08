@@ -12,6 +12,7 @@ public class ComparisonResult {
     private String status; // e.g., MATCH, MISMATCH, ERROR
     private String errorMessage;
     private List<String> differences;
+    private String timestamp;
 
     private ApiCallResult api1;
     private ApiCallResult api2;
@@ -62,9 +63,27 @@ public class ComparisonResult {
         this.differences = differences;
     }
 
-    public ApiCallResult getApi1() { return api1; }
-    public void setApi1(ApiCallResult api1) { this.api1 = api1; }
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-    public ApiCallResult getApi2() { return api2; }
-    public void setApi2(ApiCallResult api2) { this.api2 = api2; }
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public ApiCallResult getApi1() {
+        return api1;
+    }
+
+    public void setApi1(ApiCallResult api1) {
+        this.api1 = api1;
+    }
+
+    public ApiCallResult getApi2() {
+        return api2;
+    }
+
+    public void setApi2(ApiCallResult api2) {
+        this.api2 = api2;
+    }
 }

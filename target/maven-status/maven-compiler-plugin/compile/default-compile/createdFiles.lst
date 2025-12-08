@@ -10,5 +10,7 @@ com\myorg\apiurlcomparison\ComparisonResult$Status.class
 com\myorg\apiurlcomparison\ComparisonEngine.class
 com\myorg\apiurlcomparison\Authentication.class
 com\myorg\apiurlcomparison\Config.class
+com\myorg\apiurlcomparison\ComparisonService.class
+com\myorg\apiurlcomparison\ApiUrlComparisonWeb.class
 com\myorg\apiurlcomparison\http\ApiClient.class
 com\myorg\apiurlcomparison\ApiConfig.class

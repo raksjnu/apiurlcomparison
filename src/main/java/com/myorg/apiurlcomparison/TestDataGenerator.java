@@ -40,6 +40,9 @@ public class TestDataGenerator {
             }
         }
 
+        // Add Baseline (All Defaults)
+        iterations.add(new java.util.HashMap<>(defaults));
+
         // 2. Iterate each token and each of its values
         for (Map.Entry<String, List<Object>> entry : tokens.entrySet()) {
             String currentToken = entry.getKey();
@@ -48,7 +51,14 @@ public class TestDataGenerator {
             if (values == null || values.isEmpty())
                 continue;
 
+            Object mainDefault = defaults.get(currentToken);
+
             for (Object value : values) {
+                // Skip if value equals default (already covered by Baseline)
+                if (mainDefault != null && mainDefault.equals(value)) {
+                    continue;
+                }
+
                 if (iterations.size() >= maxIterations) {
                     logger.warn("Maximum number of iterations ({}) reached via ONE_BY_ONE.", maxIterations);
                     return iterations;
