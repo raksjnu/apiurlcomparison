@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <title>API Comparison Report</title>
+    <style>
+       :root {
+            --truist-purple: #2F1A4B;
+            --truist-light-purple: #6F2D91;
+            --background-gray: #F5F5F5;
+            --border-color: #E0E0E0;
+            --text-color: #333;
+            --pass-color: #28a745;
+            --fail-color: #dc3545;
+            --fail-light-bg: #f8d7da; /* Light red for mismatch background */
+            --pass-light-bg: #d4edda; /* Light green for match background */
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background-color: var(--background-gray); color: var(--text-color); }
+        h1, h2, h3, h4 { color: var(--truist-purple); }
+        header { background-color: var(--truist-purple); color: white; padding: 20px 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; }
+        main { padding: 30px 40px; }
+        .summary-panel { background-color: #fff; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 40px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .summary-header { background-color: var(--truist-purple); color: white; padding: 20px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .summary-header h2 { color: white; margin: 0; }
+        .summary-body { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .summary-item { text-align: center; }
+        .summary-item .label { font-size: 0.9em; color: #666; }
+        .summary-item .value { font-size: 2em; font-weight: bold; color: var(--truist-purple); }
+        .summary-item .status { font-size: 2.5em; font-weight: bold; padding: 10px; border-radius: 8px; }
+        .status-pass { color: var(--pass-color); }
+        .status-fail { color: var(--fail-color); }
+        .summary-apis { grid-column: 1 / -1; font-size: 0.9em; color: #555; word-break: break-all; padding-top: 10px; border-top: 1px solid var(--border-color); }
+        .iteration-block { background-color: #fff; border: 2px solid var(--truist-light-purple); border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden; }
+        .iteration-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #f8f8f8; border-bottom: 1px solid var(--border-color); }
+        .iteration-header h2 { margin: 0; font-size: 1.5em; }
+        .status-badge { padding: 5px 12px; border-radius: 15px; color: white; font-weight: bold; }
+        .status-badge.pass { background-color: var(--pass-color); }
+        .status-badge.fail { background-color: var(--fail-color); }
+        .tokens { font-size: 0.9em; color: #6c757d; margin-top: 5px; }
+        .token { display: inline-block; background-color: #e9ecef; padding: 3px 10px; border-radius: 12px; margin-right: 8px; font-size: 0.85em; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        .back-link { display: block; padding: 10px 20px; background-color: #f8f9fa; text-align: right; font-weight: bold; color: var(--truist-light-purple); text-decoration: none; border-bottom: 1px solid var(--border-color); }
+        .summary-table th, .summary-table td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .summary-table th { background-color: var(--truist-light-purple); color: white; font-weight: bold; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background-color: var(--border-color); }
+        .api-column { background-color: #fff; padding: 20px; }
+        .api-column h3 { margin-top: 0; border-bottom: 2px solid var(--truist-light-purple); padding-bottom: 8px; }
+        .api-details { font-size: 0.85em; color: #495057; background-color: #f8f9fa; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px; word-break: break-all; }
+        pre { background-color: #f1f1f1; padding: 15px; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 0.875em; border: 1px solid #ddd; }
+        .comparison-result { padding: 20px; border-top: 1px solid var(--border-color); background-color: #fdfdfd; }
+        .comparison-result h3 { margin-top: 0; }
+        .comparison-result.mismatch { background-color: var(--fail-light-bg); }
+        .comparison-result.match { background-color: var(--pass-light-bg); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Endpoint Comparison Tool</h1>
+</header>
+
+<main>
+{{#hasResults}}
+    <div class="summary-panel">
+        <div class="summary-header">
+            <h2>Execution Summary</h2>
+        </div>
+        <div class="summary-body">
+            <div class="summary-item">
+                <div class="label">Overall Status</div>
+                <div class="value status {{overallStatusCssClass}}">{{overallStatus}}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Total Iterations</div>
+                <div class="value">{{totalIterations}}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Passed</div>
+                <div class="value status-pass">{{passedCount}}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Failed</div>
+                <div class="value status-fail">{{failedCount}}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Total Time Taken</div>
+                <div class="value">{{totalTimeTaken}}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Generated On</div>
+                <div class="value" style="font-size: 1.2em; padding-top: 10px;">{{generatedTimestamp}}</div>
+            </div>
+            <div class="summary-apis">
+                <p><strong>API 1:</strong> {{api1Url}}</p>
+                <p><strong>API 2:</strong> {{api2Url}}</p>
+            </div>
+        </div>
+    </div>
+    <h2>Comparison Summary</h2>
+    <table id="comparison-summary" class="summary-table">
+        <thead>
+            <tr>
+                <th>Iteration #</th>
+                <th>Tokens Used</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#results}}
+            <tr>
+                <td>{{displayIndex}}</td>
+                <td>{{{tokensUsed}}}</td>
+                <td><span class="status-badge {{#isSuccess}}pass{{/isSuccess}}{{^isSuccess}}fail{{/isSuccess}}">{{status}}</span></td>
+                <td><a href="#iteration-{{iteration}}">View Details</a></td>
+            </tr>
+            {{/results}}
+        </tbody>
+    </table>
+
+    {{#results}}
+    <div id="iteration-{{iteration}}" class="iteration-block">
+        <a href="#comparison-summary" class="back-link">Back to Comparison Summary &uarr;</a>
+        <div class="iteration-header">
+           <div>
+                <h2>Iteration #{{iteration}}</h2>
+                <div class="tokens">{{{tokensUsed}}}</div>
+            </div>
+           {{#isSuccess}}
+            <span class="status-badge pass">MATCH</span>
+            {{/isSuccess}}
+            {{^isSuccess}}
+            <span class="status-badge fail">FAIL</span>
+            {{/isSuccess}} 
+        </div>
+
+        <div class="comparison-grid">
+            <div class="api-column">
+                <h3>API 1 Details</h3>
+                <div class="api-details">
+                    <strong>URL:</strong> {{api1Details.url}}<br>
+                    <strong>Headers:</strong>
+                    <ul>
+                        {{#api1Details.headerEntries}}<li><strong>{{key}}:</strong> {{value}}</li>{{/api1Details.headerEntries}}
+                    </ul>
+                </div>
+                <h4>Payload</h4>
+                <pre>{{api1Payload}}</pre>
+                <h4>Response</h4>
+                <pre>{{api1Response}}</pre>
+            </div>
+            <div class="api-column">
+                <h3>API 2 Details</h3>
+                <div class="api-details">
+                    <strong>URL:</strong> {{api2Details.url}}<br>
+                    <strong>Headers:</strong>
+                    <ul>
+                        {{#api2Details.headerEntries}}<li><strong>{{key}}:</strong> {{value}}</li>{{/api2Details.headerEntries}}
+                    </ul>
+                </div>
+                <h4>Payload</h4>
+                <pre>{{api2Payload}}</pre>
+                <h4>Response</h4>
+                <pre>{{api2Response}}</pre>
+            </div>
+        </div>
+        <div class="comparison-result {{#isSuccess}}match{{/isSuccess}}{{^isSuccess}}mismatch{{/isSuccess}}">
+            <h3>Comparison Result</h3>
+            <pre>Status: {{status}}
+{{#isSuccess}}
+Difference: None
+{{/isSuccess}}
+{{^isSuccess}}
+Difference: {{error}}
+{{/isSuccess}}</pre>
+        </div>
+    </div>
+    {{/results}}
+{{/hasResults}}
+
+    {{^hasResults}}
+    <div class="iteration-block">
+        <div class="iteration-header">
+            <h2>No Results</h2>
+        </div>
+        <p style="padding: 20px;">The comparison tool did not produce any results to report.</p>
+    </div>
+    {{/hasResults}}
+</main>
+
+</body>
+</html>

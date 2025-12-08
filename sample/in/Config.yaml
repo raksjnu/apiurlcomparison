@@ -1,0 +1,69 @@
+# Configuration for the API Comparison Tool
+
+# Set the type of test to run: "REST" or "SOAP"
+testType: "SOAP"
+
+# Configuration block for REST APIs
+rest:
+  api1:
+    url: "http://localhost:8081/api/resource"
+    method: "POST"
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    authentication:
+      tokenUrl: null
+      clientId: null
+      clientSecret: null
+    payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api1\\payload.json"
+  api2:
+    url: "http://localhost:8082/api/resource"
+    method: "POST"
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    authentication:
+      tokenUrl: null
+      clientId: null
+      clientSecret: null
+    payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api2\\payload.json"
+
+# Configuration block for SOAP APIs
+soap:
+  api1:
+    url: "http://localhost:8083/ws/AccountService"
+    method: "POST"
+    headers:
+      Content-Type: "text/xml;charset=UTF-8"
+      SOAPAction: "getAccountDetails"
+    authentication:
+      tokenUrl: null
+      clientId: null
+      clientSecret: null
+    payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api1\\payload.xml"
+  api2:
+    url: "http://localhost:8084/ws/AccountService"
+    method: "POST"
+    headers:
+      Content-Type: "text/xml;charset=UTF-8"
+      SOAPAction: "getAccountDetails"
+    authentication:
+      tokenUrl: null
+      clientId: null
+      clientSecret: null
+    payloadTemplatePath: "C:\\muleguard-fixed\\tmp\\in\\api2\\payload.xml"
+
+# Define tokens and the values to iterate over.
+# The tool will generate iterations from all possible combinations (Cartesian product) of the token values provided below.
+# The total number of executions will be limited by the 'maxIterations' value.
+tokens:
+  maxIterations: 1000
+  account:
+    - "12345"
+    - "99999999"
+    - "0"
+    - -123456
+    - ""
+  uuid:
+    - "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+    - "f0e9d8c7-b6a5-4321-fedc-ba0987654321"
