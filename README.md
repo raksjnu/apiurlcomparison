@@ -98,8 +98,8 @@ testType: REST  # or SOAP
 iterationController: ONE_BY_ONE  # or ALL_COMBINATIONS
 maxIterations: 100
 
-# API Endpoints
-restApis:
+# Configuration block for REST APIs
+rest:
   api1:
     baseUrl: "http://localhost:8080"
     authentication:
@@ -125,6 +125,34 @@ restApis:
         payloadTemplatePath: "C:/path/to/payload.json"
         headers:
           Content-Type: "application/json"
+
+# Configuration block for SOAP APIs
+soap:
+  api1:
+    baseUrl: "http://localhost:8083/ws/AccountService"
+    authentication:
+      clientId: "user1"
+      clientSecret: "pass1"
+    operations:
+      - name: "getAccountDetails"
+        methods: ["POST"]
+        headers:
+          Content-Type: "text/xml;charset=UTF-8"
+          SOAPAction: "getAccountDetails"
+        payloadTemplatePath: "C:/path/to/payload.xml"
+
+  api2:
+    baseUrl: "http://localhost:8084/ws/AccountService"
+    authentication:
+      clientId: "user2"
+      clientSecret: "pass2"
+    operations:
+      - name: "getAccountDetails"
+        methods: ["POST"]
+        headers:
+          Content-Type: "text/xml;charset=UTF-8"
+          SOAPAction: "getAccountDetails"
+        payloadTemplatePath: "C:/path/to/payload.xml"
 
 # Token definitions for iteration testing
 tokens:
