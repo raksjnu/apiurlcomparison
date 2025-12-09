@@ -1,13 +1,3 @@
-# API Response Comparison Tool - APITestingGuard
-
-A powerful Java-based tool for comparing API responses between two endpoints with support for both REST and SOAP APIs. Features include automated iteration testing, detailed comparison reports, and both CLI and GUI interfaces.
-
-## Features
-
-- **Dual Interface**: Command-line (CLI) and Web-based GUI
-- **Multiple API Types**: Support for REST (JSON) and SOAP (XML) APIs
-- **Flexible Iteration Strategies**:
-  - `ONE_BY_ONE`: Tests baseline + each token value individually (efficient)
   - `ALL_COMBINATIONS`: Tests all possible token combinations (exhaustive)
 - **Original Payload Testing**: Always executes the original payload as-is before token replacements
 - **Detailed Comparison Reports**: 
@@ -235,6 +225,191 @@ Machine-readable format for automation and integration:
   "differences": []
 }
 ```
+
+## Baseline Testing
+
+The tool supports **baseline testing** to capture API responses as a baseline and compare future API responses against that baseline. This is useful for:
+- **Regression testing**: Ensure new code changes don't break existing API behavior
+- **Upgrade validation**: Compare API responses before and after system upgrades
+- **Version comparison**: Track API response changes across different versions
+
+### How Baseline Testing Works
+
+1. **Capture Mode**: Run your API tests and save all request/response data as a "baseline"
+2. **Compare Mode**: Run the same tests later and compare against the saved baseline
+3. **Results**: Get detailed comparison reports showing any differences
+
+### Baseline Folder Structure
+
+Baselines are organized in a hierarchical folder structure:
+
+```
+baselines/
+└── {serviceName}/           # e.g., "AccountService"
+    └── {date}/              # e.g., "20251208" (YYYYMMDD)
+        └── {run-id}/        # e.g., "run-001"
+            ├── metadata.json       # Run metadata (description, tags, timestamp)
+            ├── summary.json        # Summary of results
+            └── iteration-{N}/      # One folder per iteration
+                ├── request.xml
+                ├── request-headers.json
+                ├── request-metadata.json
+                ├── response.xml
+                ├── response-headers.json
+                └── response-metadata.json
+```
+
+### Using Baseline Testing (GUI)
+
+The web GUI provides an intuitive interface for baseline testing:
+
+1. **Start the GUI**:
+   ```bash
+   # Windows
+   start-gui.bat
+   
+   # Linux/Mac
+   ./start-gui.sh
+   ```
+
+2. **Switch to Baseline Mode**:
+   - In the GUI, change the **Mode** dropdown from "Live (API1 vs API2)" to "Baseline Testing"
+   - The URL2 field will automatically hide (only one API endpoint needed)
+
+3. **Capture a Baseline**:
+   - Select **Operation**: "Capture Baseline"
+   - Fill in:
+     - **Service Name**: e.g., "AccountService"
+     - **Description**: e.g., "Pre-upgrade baseline v1.0.0"
+     - **Tags**: e.g., "v1.0.0, pre-upgrade"
+   - Configure your API endpoint, operation, and test parameters
+   - Click **"Capture Baseline"**
+   - Results are saved to: `baselines/{serviceName}/{date}/{run-id}/`
+
+4. **Compare Against Baseline**:
+   - Select **Operation**: "Compare with Baseline"
+   - Choose from dropdowns:
+     - **Service**: Select the service (e.g., "AccountService")
+     - **Date**: Select the date when baseline was captured
+     - **Run**: Select the specific run to compare against
+   - Configure your current API endpoint and test parameters
+   - Click **"Compare with Baseline"**
+   - View comparison results showing matches and mismatches
+
+### Using Baseline Testing (CLI)
+
+#### Capture a Baseline
+
+Update `config.yaml`:
+
+```yaml
+# Comparison mode: "LIVE" or "BASELINE"
+comparisonMode: "BASELINE"
+
+baseline:
+  # Operation: "CAPTURE" or "COMPARE"
+  operation: "CAPTURE"
+  
+  # Directory where baselines are stored
+  storageDir: "baselines"
+  
+  # Service name for organization
+  serviceName: "AccountService"
+  
+  # Description for this baseline
+  description: "Pre-upgrade baseline v1.0.0"
+  
+  # Tags for identification
+  tags:
+    - "v1.0.0"
+    - "pre-upgrade"
+```
+
+Run the comparison:
+
+```bash
+java -jar target/apiurlcomparison-1.0.0-shaded.jar
+```
+
+#### Compare Against Baseline
+
+Update `config.yaml`:
+
+```yaml
+comparisonMode: "BASELINE"
+
+baseline:
+  operation: "COMPARE"
+  storageDir: "baselines"
+  serviceName: "AccountService"
+  
+  # Specify which baseline to compare against
+  compareDate: "20251208"      # Date folder (YYYYMMDD)
+  compareRunId: "run-001"      # Run ID to compare against
+```
+
+Run the comparison:
+
+```bash
+java -jar target/apiurlcomparison-1.0.0-shaded.jar
+```
+
+### Baseline Testing Example Workflow
+
+**Scenario**: You're upgrading your API from v1.0 to v2.0 and want to ensure no breaking changes.
+
+1. **Before Upgrade - Capture Baseline**:
+   ```yaml
+   comparisonMode: "BASELINE"
+   baseline:
+     operation: "CAPTURE"
+     serviceName: "AccountService"
+     description: "Pre-upgrade baseline v1.0.0"
+     tags: ["v1.0.0", "pre-upgrade"]
+   
+   url1: "http://localhost:8080/api/v1/account"
+   ```
+   
+   This creates: `baselines/AccountService/20251208/run-001/`
+
+2. **After Upgrade - Compare**:
+   ```yaml
+   comparisonMode: "BASELINE"
+   baseline:
+     operation: "COMPARE"
+     serviceName: "AccountService"
+     compareDate: "20251208"
+     compareRunId: "run-001"
+   
+   url1: "http://localhost:8080/api/v2/account"
+   ```
+   
+   This compares v2.0 responses against the v1.0 baseline.
+
+3. **Review Results**:
+   - **MATCH**: API behavior unchanged ✓
+   - **MISMATCH**: Review differences to ensure they're intentional
+   - HTML report shows detailed comparison with highlighted differences
+
+### Baseline Metadata
+
+Each baseline run includes metadata for easy identification:
+
+**metadata.json**:
+```json
+{
+  "serviceName": "AccountService",
+  "description": "Pre-upgrade baseline v1.0.0",
+  "tags": ["v1.0.0", "pre-upgrade"],
+  "timestamp": "2025-12-08T17:40:23.456Z",
+  "totalIterations": 5
+}
+```
+
+This metadata is displayed in:
+- GUI dropdown menus (when selecting a baseline to compare)
+- HTML comparison reports
+- CLI output
 
 ## Examples
 
