@@ -41,7 +41,7 @@ public class ComparisonEngine {
 
             if ("SOAP".equalsIgnoreCase(apiType)) {
                 try {
-                    Diff xmlDiff = DiffBuilder.compare(response1).withTest(response2).ignoreWhitespace().build();
+                    Diff xmlDiff = DiffBuilder.compare(response1).withTest(response2).ignoreComments().build();
                     isMatch = !xmlDiff.hasDifferences();
                     if (!isMatch) {
                         for (org.xmlunit.diff.Difference diff : xmlDiff.getDifferences()) {
