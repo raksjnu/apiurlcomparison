@@ -1,10 +1,7 @@
 {
-  "iterationNumber" : 3,
-  "timestamp" : "2025-12-08 17:40:21",
-  "tokensUsed" : {
-    "uuid" : "id1",
-    "account" : "1000"
-  },
+  "iterationNumber" : 1,
+  "timestamp" : "2025-12-09 09:38:58",
+  "tokensUsed" : { },
   "endpoint" : "http://localhost:8083/ws/AccountService",
   "method" : "POST",
   "soapAction" : "getAccountDetails",

@@ -363,16 +363,32 @@ document.addEventListener('DOMContentLoaded', () => {
             timeZoneName: 'short'
         });
 
+        // Check if this is a baseline operation
+        const isBaselineMode = results.length > 0 && results[0].baselinePath;
+        const baselinePath = isBaselineMode ? results[0].baselinePath : null;
+        const baselineOperation = isBaselineMode ? (results[0].api2 ? 'Baseline Used' : 'Baseline Captured') : null;
+
         const summaryContainer = document.createElement('div');
         summaryContainer.style.marginBottom = '20px';
+
+        // Build execution summary HTML
+        let execSummaryHtml = `
+            <div><strong>Total Iterations:</strong> ${total}</div>
+            <div><strong>Total Duration:</strong> ${totalDuration} ms</div>`;
+
+        // Add baseline path if present
+        if (baselinePath && baselineOperation) {
+            execSummaryHtml += `<div><strong>${baselineOperation}:</strong> ${escapeHtml(baselinePath)}</div>`;
+        }
+
+        execSummaryHtml += `<div><strong>Report Generated:</strong> ${timestamp}</div>`;
+
         summaryContainer.innerHTML = `
             <div class="comparison-grid" style="gap: 10px;">
                 <div class="card" style="padding: 15px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <h3 style="margin-bottom: 10px; font-size: 1rem; color: #27173e;">Execution Summary</h3>
                     <div style="font-size: 0.9rem; line-height: 1.6;">
-                        <div><strong>Total Iterations:</strong> ${total}</div>
-                        <div><strong>Total Duration:</strong> ${totalDuration} ms</div>
-                        <div><strong>Report Generated:</strong> ${timestamp}</div>
+                        ${execSummaryHtml}
                     </div>
                 </div>
                 <div class="card" style="padding: 15px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -458,16 +474,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 } else {
+                    // Determine labels based on baseline mode
+                    const isBaselineComparison = res.baselineServiceName != null;
+                    const api1Label = isBaselineComparison ? 'API Current' : 'API 1';
+                    const api2Label = isBaselineComparison ? 'API Baseline' : 'API 2';
+
                     body.innerHTML = `
                         ${diffHtml}
                         ${reqDisplay}
                         <div class="comparison-grid">
                             <div class="payload-box">
-                                <h4>API 1 Response (${res.api1.duration}ms)</h4>
+                                <h4>${api1Label} Response (${res.api1.duration}ms)</h4>
                                 <pre>${formatJson(res.api1.responsePayload)}</pre>
                             </div>
                             <div class="payload-box">
-                                <h4>API 2 Response (${res.api2.duration}ms)</h4>
+                                <h4>${api2Label} Response (${res.api2.duration}ms)</h4>
                                 <pre>${formatJson(res.api2.responsePayload)}</pre>
                             </div>
                         </div>

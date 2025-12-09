@@ -9,7 +9,7 @@
 <div class="container">
 <h1>API Response Comparison Tool - APITestingGuard</h1>
 <div class="summary-container">
-<div class="summary-box"><h2>Execution Summary</h2><p><strong>Total Iterations:</strong> 5</p><p><strong>Total API Call Duration:</strong> 721 ms</p><p><strong>Report Generated At:</strong> 2025-12-08 19:55:10 CST</p></div>
+<div class="summary-box"><h2>Execution Summary</h2><p><strong>Total Iterations:</strong> 5</p><p><strong>Total API Call Duration:</strong> 665 ms</p><p><strong>Baseline Used:</strong> baselines\AccountService\20251208\run-001</p><p><strong>Report Generated At:</strong> 2025-12-09 09:20:53 CST</p></div>
 <div class="summary-box"><h2>Comparison Summary</h2><p><strong>Matches:</strong> <span class="status-count match">3</span></p><p><strong>Mismatches:</strong> <span class="status-count mismatch">2</span></p><p><strong>Errors:</strong> <span class="status-count error">0</span></p></div>
 </div>
 <h2>Iteration Details</h2>
@@ -38,7 +38,7 @@
 </div>
 <hr>
 <div class="api-details">
-<div class="api-column"><h3>API 1</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 261ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Current</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 201ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;15&lt;/AccountNumber&gt;
@@ -46,7 +46,7 @@
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;SUCCESS&lt;/status&gt;&lt;transactionId&gt;shared-soap-id-12345&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T10:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
-<div class="api-column"><h3>API 2</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 422ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Baseline</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 422ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;15&lt;/AccountNumber&gt;
@@ -81,7 +81,7 @@
 <li>Expected text value 'soap-api1-specific-id-for-999' but was 'soap-api1-specific-id-for-990' - comparing &lt;transactionId ...&gt;soap-api1-specific-id-for-999&lt;/transactionId&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/transactionId[1]/text()[1] to &lt;transactionId ...&gt;soap-api1-specific-id-for-990&lt;/transactionId&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/transactionId[1]/text()[1] (DIFFERENT)</li>
 </ul></div>
 <div class="api-details">
-<div class="api-column"><h3>API 1</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 5ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Current</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 5ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;999&lt;/AccountNumber&gt;
@@ -89,7 +89,7 @@
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;SUCCESS&lt;/status&gt;&lt;transactionId&gt;soap-api1-specific-id-for-999&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T11:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
-<div class="api-column"><h3>API 2</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 7ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Baseline</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 7ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;999&lt;/AccountNumber&gt;
@@ -121,7 +121,7 @@
 </div>
 <hr>
 <div class="api-details">
-<div class="api-column"><h3>API 1</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 4ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Current</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 5ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;1000&lt;/AccountNumber&gt;
@@ -129,7 +129,7 @@
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;SUCCESS&lt;/status&gt;&lt;transactionId&gt;shared-soap-id-12345&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T10:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
-<div class="api-column"><h3>API 2</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 5ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Baseline</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 5ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;1000&lt;/AccountNumber&gt;
@@ -161,7 +161,7 @@
 </div>
 <hr>
 <div class="api-details">
-<div class="api-column"><h3>API 1</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 4ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Current</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 6ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;1001&lt;/AccountNumber&gt;
@@ -169,7 +169,7 @@
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;SUCCESS&lt;/status&gt;&lt;transactionId&gt;shared-soap-id-12345&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T10:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
-<div class="api-column"><h3>API 2</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 6ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Baseline</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 6ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;1001&lt;/AccountNumber&gt;
@@ -201,10 +201,10 @@
 </div>
 <hr>
 <div><strong>Differences:</strong><ul>
-<li>Expected text value 'SUCCESS' but was 'OK' - comparing &lt;status ...&gt;SUCCESS&lt;/status&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/status[1]/text()[1] to &lt;status ...&gt;OK&lt;/status&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/status[1]/text()[1] (DIFFERENT)</li>
+<li>Expected text value 'SUCCESS' but was 'OK1' - comparing &lt;status ...&gt;SUCCESS&lt;/status&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/status[1]/text()[1] to &lt;status ...&gt;OK1&lt;/status&gt; at /Envelope[1]/Body[1]/getAccountDetailsResponse[1]/return[1]/status[1]/text()[1] (DIFFERENT)</li>
 </ul></div>
 <div class="api-details">
-<div class="api-column"><h3>API 1</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 3ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Current</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 4ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;999&lt;/AccountNumber&gt;
@@ -212,14 +212,14 @@
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;SUCCESS&lt;/status&gt;&lt;transactionId&gt;soap-api1-specific-id-for-999&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T11:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
-<div class="api-column"><h3>API 2</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 4ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<div class="api-column"><h3>API Baseline</h3><p><strong>URL:</strong> http://localhost:8083/ws/AccountService</p><p><strong>Method:</strong> POST</p><p><strong>Status Code:</strong> 200</p><p><strong>Duration:</strong> 4ms</p><h4>Request Payload</h4><pre><code>&lt;?xml version="1.0" encoding="utf-8" standalone="no"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;soap:Body&gt;
     &lt;Add xmlns="http://tempuri.org/"&gt;
       &lt;AccountNumber&gt;999&lt;/AccountNumber&gt;
       &lt;intB&gt;10&lt;/intB&gt;
     &lt;/Add&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;OK&lt;/status&gt;&lt;transactionId&gt;soap-api1-specific-id-for-999&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T11:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
+&lt;/soap:Envelope&gt;</code></pre><h4>Response Payload</h4><pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soap:Body&gt;&lt;ns2:getAccountDetailsResponse xmlns:ns2="http://service.ws.myorg.com/"&gt;&lt;return&gt;&lt;status&gt;OK1&lt;/status&gt;&lt;transactionId&gt;soap-api1-specific-id-for-999&lt;/transactionId&gt;&lt;timestamp&gt;2025-12-01T11:00:00Z&lt;/timestamp&gt;&lt;/return&gt;&lt;/ns2:getAccountDetailsResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</code></pre></div>
 </div>
 </div></td></tr>
 </tbody></table>

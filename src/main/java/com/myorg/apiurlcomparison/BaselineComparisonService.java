@@ -78,8 +78,12 @@ public class BaselineComparisonService {
                 result.setBaselineServiceName(serviceName);
                 result.setBaselineDate(date);
                 result.setBaselineRunId(runId);
-                result.setBaselineDescription("Baseline captured to: " + baselineConfig.getStorageDir() + "/"
-                        + serviceName + "/" + date + "/" + runId);
+
+                // Set formatted baseline path for display
+                String baselinePath = baselineConfig.getStorageDir() + "\\" + serviceName + "\\" + date + "\\" + runId;
+                result.setBaselinePath(baselinePath);
+
+                result.setBaselineDescription("Baseline captured to: " + baselinePath);
                 result.setBaselineTags(baselineConfig.getTags());
                 result.setBaselineCaptureTimestamp(ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
@@ -163,6 +167,11 @@ public class BaselineComparisonService {
                 result.setBaselineServiceName(serviceName);
                 result.setBaselineDate(date);
                 result.setBaselineRunId(runId);
+
+                // Set formatted baseline path for display
+                String baselinePath = baselineConfig.getStorageDir() + "\\" + serviceName + "\\" + date + "\\" + runId;
+                result.setBaselinePath(baselinePath);
+
                 result.setBaselineDescription(baseline.getMetadata().getDescription());
                 result.setBaselineTags(baseline.getMetadata().getTags());
                 result.setBaselineCaptureTimestamp(baseline.getMetadata().getCaptureTimestamp());

@@ -126,8 +126,16 @@ public class HtmlReportGenerator {
                 }
 
                 writer.println("<div class=\"api-details\">");
-                writer.println(formatApiCallResult("API 1", result.getApi1()));
-                writer.println(formatApiCallResult("API 2", result.getApi2()));
+
+                // Determine if this is a baseline comparison
+                boolean isBaselineComparison = result.getBaselineServiceName() != null;
+
+                // Format API labels based on mode
+                String api1Label = isBaselineComparison ? "API Current" : "API 1";
+                String api2Label = isBaselineComparison ? "API Baseline" : "API 2";
+
+                writer.println(formatApiCallResult(api1Label, result.getApi1()));
+                writer.println(formatApiCallResult(api2Label, result.getApi2()));
                 writer.println("</div>"); // end api-details
 
                 writer.println("</div></td></tr>");
@@ -193,11 +201,32 @@ public class HtmlReportGenerator {
                         + (r.getApi2() != null ? r.getApi2().getDuration() : 0))
                 .sum();
 
+        // Check if this is a baseline operation
+        String baselinePath = null;
+        String baselineOperation = null;
+        if (!results.isEmpty() && results.get(0).getBaselinePath() != null) {
+            baselinePath = results.get(0).getBaselinePath();
+            // Determine if this is capture or compare based on whether api2 exists
+            baselineOperation = results.get(0).getApi2() != null ? "Baseline Used" : "Baseline Captured";
+        }
+
         writer.println("<div class=\"summary-container\">");
-        writer.println("<div class=\"summary-box\"><h2>Execution Summary</h2>"
-                + "<p><strong>Total Iterations:</strong> " + results.size() + "</p>"
-                + "<p><strong>Total API Call Duration:</strong> " + totalDuration + " ms</p>"
-                + "<p><strong>Report Generated At:</strong> " + generationTimestamp + "</p></div>");
+
+        // Build execution summary content
+        StringBuilder execSummary = new StringBuilder();
+        execSummary.append("<div class=\"summary-box\"><h2>Execution Summary</h2>")
+                .append("<p><strong>Total Iterations:</strong> ").append(results.size()).append("</p>")
+                .append("<p><strong>Total API Call Duration:</strong> ").append(totalDuration).append(" ms</p>");
+
+        // Add baseline path if present
+        if (baselinePath != null) {
+            execSummary.append("<p><strong>").append(baselineOperation).append(":</strong> ")
+                    .append(escapeHtml(baselinePath)).append("</p>");
+        }
+
+        execSummary.append("<p><strong>Report Generated At:</strong> ").append(generationTimestamp)
+                .append("</p></div>");
+        writer.println(execSummary.toString());
 
         writer.println("<div class=\"summary-box\"><h2>Comparison Summary</h2>"
                 + "<p><strong>Matches:</strong> <span class=\"status-count match\">" + matches + "</span></p>"

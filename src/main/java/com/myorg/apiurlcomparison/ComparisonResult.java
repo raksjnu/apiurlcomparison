@@ -18,6 +18,7 @@ public class ComparisonResult {
     private String baselineServiceName;
     private String baselineDate;
     private String baselineRunId;
+    private String baselinePath; // Formatted path: baselines\{service}\{date}\{runId}
     private String baselineDescription;
     private java.util.List<String> baselineTags;
     private String baselineCaptureTimestamp;
@@ -141,5 +142,13 @@ public class ComparisonResult {
 
     public void setBaselineCaptureTimestamp(String baselineCaptureTimestamp) {
         this.baselineCaptureTimestamp = baselineCaptureTimestamp;
+    }
+
+    public String getBaselinePath() {
+        return baselinePath;
+    }
+
+    public void setBaselinePath(String baselinePath) {
+        this.baselinePath = baselinePath;
     }
 }
