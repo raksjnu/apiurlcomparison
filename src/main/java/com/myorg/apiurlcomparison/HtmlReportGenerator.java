@@ -59,6 +59,7 @@ public class HtmlReportGenerator {
             writer.println(getStyles());
             writer.println("</head>");
             writer.println("<body>");
+            writer.println("<div class=\"container\">");
             writer.println("<h1>API Response Comparison Tool - APITestingGuard</h1>");
 
             // --- Summaries ---
@@ -89,6 +90,31 @@ public class HtmlReportGenerator {
                 writer.println("<td colspan=\"5\">");
                 writer.println("<div class=\"details-content\">");
 
+                // Show baseline metadata if present
+                if (result.getBaselineServiceName() != null) {
+                    writer.println("<div class=\"baseline-info\">");
+                    writer.println("<h4>📊 Baseline Information</h4>");
+                    writer.println(
+                            "<p><strong>Service:</strong> " + escapeHtml(result.getBaselineServiceName()) + "</p>");
+                    writer.println("<p><strong>Date:</strong> " + escapeHtml(result.getBaselineDate()) + "</p>");
+                    writer.println("<p><strong>Run ID:</strong> " + escapeHtml(result.getBaselineRunId()) + "</p>");
+                    if (result.getBaselineDescription() != null) {
+                        writer.println("<p><strong>Description:</strong> " + escapeHtml(result.getBaselineDescription())
+                                + "</p>");
+                    }
+                    if (result.getBaselineTags() != null && !result.getBaselineTags().isEmpty()) {
+                        writer.println("<p><strong>Tags:</strong> "
+                                + escapeHtml(String.join(", ", result.getBaselineTags())) + "</p>");
+                    }
+                    writer.println("<p><strong>Captured:</strong> " + escapeHtml(result.getBaselineCaptureTimestamp())
+                            + "</p>");
+                    writer.println("<p class=\"comparison-note\"><em>API1 = Current Live API | API2 = Baseline from "
+                            + escapeHtml(result.getBaselineDate()) + "/" + escapeHtml(result.getBaselineRunId())
+                            + "</em></p>");
+                    writer.println("</div>");
+                    writer.println("<hr>");
+                }
+
                 if ("ERROR".equals(result.getStatus())) {
                     writer.println("<p class=\"error-message\"><strong>Error:</strong> "
                             + escapeHtml(result.getErrorMessage()) + "</p>");
@@ -109,7 +135,8 @@ public class HtmlReportGenerator {
             }
 
             writer.println("</tbody></table>");
-            writer.println(getScript()); // This line was causing a compilation error
+            writer.println("</div>"); // Close container
+            writer.println(getScript());
             writer.println("</body>");
             writer.println("</html>");
         }
@@ -194,7 +221,8 @@ public class HtmlReportGenerator {
 
     private static String getStyles() {
         return "<style>"
-                + "body { font-family: Arial, sans-serif; margin: 20px; background-color: #F5F0FA; color: #333333; }"
+                + "body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #E3F2FD; color: #333333; }"
+                + ".container { max-width: 95%; margin: 0 auto; background-color: #F5F0FA; border: 8px solid #2196F3; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3); }"
                 + "h1 { background-color: #5E278B; color: #FFFFFF; padding: 15px; border-radius: 8px; }"
                 + "h2 { color: #5E278B; border-bottom: 2px solid #D1C4E9; padding-bottom: 5px; }"
                 + ".summary-container { display: flex; gap: 20px; margin-bottom: 20px; border-radius: 8px; }"

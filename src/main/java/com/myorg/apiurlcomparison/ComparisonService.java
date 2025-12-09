@@ -13,6 +13,12 @@ public class ComparisonService {
     private static final Logger logger = LoggerFactory.getLogger(ComparisonService.class);
 
     public List<ComparisonResult> execute(Config config) {
+        // Check if we're in baseline mode
+        if ("BASELINE".equalsIgnoreCase(config.getComparisonMode())) {
+            return executeBaselineMode(config);
+        }
+
+        // Original LIVE comparison mode
         List<ComparisonResult> allResults = new ArrayList<>();
 
         // Prepare for iterations
@@ -49,6 +55,43 @@ public class ComparisonService {
             }
         }
         return allResults;
+    }
+
+    /**
+     * Execute baseline mode (CAPTURE or COMPARE)
+     */
+    private List<ComparisonResult> executeBaselineMode(Config config) {
+        try {
+            Config.BaselineConfig baselineConfig = config.getBaseline();
+            if (baselineConfig == null) {
+                throw new IllegalArgumentException(
+                        "Baseline configuration is required when comparisonMode is BASELINE");
+            }
+
+            String storageDir = baselineConfig.getStorageDir();
+            BaselineStorageService storageService = new BaselineStorageService(storageDir);
+            BaselineComparisonService baselineService = new BaselineComparisonService(storageService);
+
+            String operation = baselineConfig.getOperation();
+            if ("CAPTURE".equalsIgnoreCase(operation)) {
+                logger.info("Executing baseline CAPTURE mode");
+                return baselineService.captureBaseline(config);
+            } else if ("COMPARE".equalsIgnoreCase(operation)) {
+                logger.info("Executing baseline COMPARE mode");
+                return baselineService.compareWithBaseline(config);
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid baseline operation: " + operation + ". Must be CAPTURE or COMPARE");
+            }
+        } catch (Exception e) {
+            logger.error("Error in baseline mode: {}", e.getMessage(), e);
+            List<ComparisonResult> errorResults = new ArrayList<>();
+            ComparisonResult errorResult = new ComparisonResult();
+            errorResult.setStatus(ComparisonResult.Status.ERROR);
+            errorResult.setErrorMessage("Baseline mode failed: " + e.getMessage());
+            errorResults.add(errorResult);
+            return errorResults;
+        }
     }
 
     private void processApis(Map<String, ApiConfig> apis, Map<String, Object> currentTokens,

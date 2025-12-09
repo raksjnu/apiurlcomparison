@@ -14,6 +14,14 @@ public class ComparisonResult {
     private List<String> differences;
     private String timestamp;
 
+    // Baseline metadata (only populated in BASELINE comparison mode)
+    private String baselineServiceName;
+    private String baselineDate;
+    private String baselineRunId;
+    private String baselineDescription;
+    private java.util.List<String> baselineTags;
+    private String baselineCaptureTimestamp;
+
     private ApiCallResult api1;
     private ApiCallResult api2;
 
@@ -85,5 +93,53 @@ public class ComparisonResult {
 
     public void setApi2(ApiCallResult api2) {
         this.api2 = api2;
+    }
+
+    public String getBaselineServiceName() {
+        return baselineServiceName;
+    }
+
+    public void setBaselineServiceName(String baselineServiceName) {
+        this.baselineServiceName = baselineServiceName;
+    }
+
+    public String getBaselineDate() {
+        return baselineDate;
+    }
+
+    public void setBaselineDate(String baselineDate) {
+        this.baselineDate = baselineDate;
+    }
+
+    public String getBaselineRunId() {
+        return baselineRunId;
+    }
+
+    public void setBaselineRunId(String baselineRunId) {
+        this.baselineRunId = baselineRunId;
+    }
+
+    public String getBaselineDescription() {
+        return baselineDescription;
+    }
+
+    public void setBaselineDescription(String baselineDescription) {
+        this.baselineDescription = baselineDescription;
+    }
+
+    public java.util.List<String> getBaselineTags() {
+        return baselineTags;
+    }
+
+    public void setBaselineTags(java.util.List<String> baselineTags) {
+        this.baselineTags = baselineTags;
+    }
+
+    public String getBaselineCaptureTimestamp() {
+        return baselineCaptureTimestamp;
+    }
+
+    public void setBaselineCaptureTimestamp(String baselineCaptureTimestamp) {
+        this.baselineCaptureTimestamp = baselineCaptureTimestamp;
     }
 }
