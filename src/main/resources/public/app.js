@@ -22,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load defaults on startup
     loadDefaults();
 
+    // Initialize baseline controls
+    initBaselineControls();
+
     async function loadDefaults() {
         try {
             const response = await fetch('/api/config');
@@ -121,19 +124,27 @@ document.addEventListener('DOMContentLoaded', () => {
         setLoading(true);
 
         try {
-            // 3. Send Request
-            const response = await fetch('/api/compare', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(config)
-            });
+            // 3. Check if baseline mode
+            const comparisonMode = document.getElementById('comparisonMode').value;
 
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (comparisonMode === 'BASELINE') {
+                // Handle baseline mode
+                await handleBaselineComparison();
+            } else {
+                // Handle normal LIVE comparison
+                const response = await fetch('/api/compare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
 
-            const results = await response.json();
+                if (!response.ok) throw new Error('Network response was not ok');
 
-            // 4. Render Results
-            renderResults(results);
+                const results = await response.json();
+
+                // 4. Render Results
+                renderResults(results);
+            }
         } catch (error) {
             console.error('Error:', error);
             resultsContainer.innerHTML = `<div class="error-msg">Error executing comparison: ${error.message}</div>`;
@@ -141,6 +152,78 @@ document.addEventListener('DOMContentLoaded', () => {
             setLoading(false);
         }
     });
+
+    // Handle baseline comparison (capture or compare)
+    async function handleBaselineComparison() {
+        const operation = document.getElementById('baselineOperation').value;
+
+        if (operation === 'CAPTURE') {
+            // Capture baseline
+            const serviceName = document.getElementById('baselineServiceName').value.trim();
+            const description = document.getElementById('baselineDescription').value.trim();
+            const tagsStr = document.getElementById('baselineTags').value.trim();
+            const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()) : [];
+
+            if (!serviceName) {
+                alert('Please enter a service name for baseline capture');
+                return;
+            }
+
+            // Build config for baseline capture
+            const config = buildConfig();
+            config.comparisonMode = 'BASELINE';
+            config.baseline = {
+                operation: 'CAPTURE',
+                serviceName: serviceName,
+                description: description,
+                tags: tags
+            };
+
+            const response = await fetch('/api/compare', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+
+            if (!response.ok) throw new Error('Baseline capture failed');
+
+            const results = await response.json();
+            renderResults(results);
+
+        } else {
+            // Compare with baseline
+            const serviceName = document.getElementById('baselineServiceSelect').value;
+            const date = document.getElementById('baselineDateSelect').value;
+            const runId = document.getElementById('baselineRunSelect').value;
+
+            if (!serviceName || !date || !runId) {
+                alert('Please select service, date, and run for baseline comparison');
+                return;
+            }
+
+            // Build config for baseline comparison
+            const config = buildConfig();
+            config.comparisonMode = 'BASELINE';
+            config.baseline = {
+                operation: 'COMPARE',
+                serviceName: serviceName,
+                compareDate: date,
+                compareRunId: runId
+            };
+
+            const response = await fetch('/api/compare', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+
+            if (!response.ok) throw new Error('Baseline comparison failed');
+
+            const results = await response.json();
+            renderResults(results);
+        }
+    }
+
 
     function buildConfig() {
         const testType = document.getElementById('testType').value;
@@ -507,5 +590,173 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('resizing');
             }
         });
+    }
+
+    // ============================================
+    // BASELINE TESTING FUNCTIONALITY
+    // ============================================
+
+    // Initialize baseline controls
+    function initBaselineControls() {
+        const comparisonMode = document.getElementById('comparisonMode');
+        const baselineControls = document.getElementById('baselineControls');
+        const baselineOperation = document.getElementById('baselineOperation');
+        const captureFields = document.getElementById('captureFields');
+        const compareFields = document.getElementById('compareFields');
+        const baselineServiceSelect = document.getElementById('baselineServiceSelect');
+        const baselineDateSelect = document.getElementById('baselineDateSelect');
+        const baselineRunSelect = document.getElementById('baselineRunSelect');
+
+        if (!comparisonMode || !baselineControls) return;
+
+        // Update button label based on mode and operation
+        function updateButtonLabel() {
+            const mode = comparisonMode.value;
+            const operation = baselineOperation ? baselineOperation.value : 'CAPTURE';
+
+            if (mode === 'BASELINE') {
+                if (operation === 'CAPTURE') {
+                    compareBtn.innerText = 'Capture Baseline';
+                } else {
+                    compareBtn.innerText = 'Compare with Baseline';
+                }
+            } else {
+                compareBtn.innerText = 'Run Comparison';
+            }
+        }
+
+        // Toggle baseline controls visibility
+        comparisonMode.addEventListener('change', function () {
+            const url2Group = document.getElementById('url2Group');
+            const url1Label = document.querySelector('#urlRow .input-group:first-child label');
+
+            if (this.value === 'BASELINE') {
+                baselineControls.style.display = 'block';
+                if (url2Group) url2Group.style.display = 'none';
+                if (url1Label) url1Label.textContent = 'API Endpoint URL';
+                loadBaselineServices();
+                updateButtonLabel();
+            } else {
+                baselineControls.style.display = 'none';
+                if (url2Group) url2Group.style.display = 'block';
+                if (url1Label) url1Label.textContent = 'Endpoint 1 URL';
+                compareBtn.innerText = 'Run Comparison';
+            }
+        });
+
+        // Toggle between capture and compare fields
+        if (baselineOperation) {
+            baselineOperation.addEventListener('change', function () {
+                if (this.value === 'CAPTURE') {
+                    captureFields.style.display = 'block';
+                    compareFields.style.display = 'none';
+                } else {
+                    captureFields.style.display = 'none';
+                    compareFields.style.display = 'block';
+                    loadBaselineServices();
+                }
+                updateButtonLabel();
+            });
+        }
+
+        // Load dates when service is selected
+        if (baselineServiceSelect) {
+            baselineServiceSelect.addEventListener('change', function () {
+                if (this.value) {
+                    loadBaselineDates(this.value);
+                } else {
+                    baselineDateSelect.innerHTML = '<option value="">-- Select Date --</option>';
+                    baselineDateSelect.disabled = true;
+                    baselineRunSelect.innerHTML = '<option value="">-- Select Run --</option>';
+                    baselineRunSelect.disabled = true;
+                }
+            });
+        }
+
+        // Load runs when date is selected
+        if (baselineDateSelect) {
+            baselineDateSelect.addEventListener('change', function () {
+                const service = baselineServiceSelect.value;
+                if (service && this.value) {
+                    loadBaselineRuns(service, this.value);
+                } else {
+                    baselineRunSelect.innerHTML = '<option value="">-- Select Run --</option>';
+                    baselineRunSelect.disabled = true;
+                }
+            });
+        }
+    }
+
+    // Load available baseline services
+    async function loadBaselineServices() {
+        try {
+            const response = await fetch('/api/baselines/services');
+            const services = await response.json();
+
+            const select = document.getElementById('baselineServiceSelect');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Select Service --</option>';
+
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service;
+                option.textContent = service;
+                select.appendChild(option);
+            });
+
+            select.disabled = false;
+        } catch (error) {
+            console.error('Error loading baseline services:', error);
+        }
+    }
+
+    // Load dates for selected service
+    async function loadBaselineDates(serviceName) {
+        try {
+            const response = await fetch(`/api/baselines/dates/${serviceName}`);
+            const dates = await response.json();
+
+            const select = document.getElementById('baselineDateSelect');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Select Date --</option>';
+
+            dates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = date;
+                select.appendChild(option);
+            });
+
+            select.disabled = false;
+        } catch (error) {
+            console.error('Error loading baseline dates:', error);
+        }
+    }
+
+    // Load runs for selected service and date
+    async function loadBaselineRuns(serviceName, date) {
+        try {
+            const response = await fetch(`/api/baselines/runs/${serviceName}/${date}`);
+            const runs = await response.json();
+
+            const select = document.getElementById('baselineRunSelect');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Select Run --</option>';
+
+            runs.forEach(run => {
+                const option = document.createElement('option');
+                option.value = run.runId;
+                const label = `${run.runId} - ${run.description || 'No description'} (${run.totalIterations} iterations)`;
+                option.textContent = label;
+                select.appendChild(option);
+            });
+
+            select.disabled = false;
+        } catch (error) {
+            console.error('Error loading baseline runs:', error);
+        }
     }
 });

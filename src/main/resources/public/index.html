@@ -31,6 +31,66 @@
                             <option value="SOAP" selected>SOAP</option>
                         </select>
                     </div>
+                    <div class="toggle-group">
+                        <label>Mode:</label>
+                        <select id="comparisonMode">
+                            <option value="LIVE" selected>Live (API1 vs API2)</option>
+                            <option value="BASELINE">Baseline Testing</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Baseline Controls (shown when BASELINE mode selected) -->
+                <div id="baselineControls" class="baseline-controls" style="display:none;">
+                    <div class="baseline-header">
+                        <span class="baseline-badge">📊 Baseline Mode</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Operation:</label>
+                        <select id="baselineOperation">
+                            <option value="CAPTURE">Capture Baseline</option>
+                            <option value="COMPARE">Compare with Baseline</option>
+                        </select>
+                    </div>
+
+                    <!-- Capture Mode Fields -->
+                    <div id="captureFields" class="baseline-section">
+                        <div class="input-group">
+                            <label>Service Name:</label>
+                            <input type="text" id="baselineServiceName" placeholder="e.g., AccountService">
+                        </div>
+                        <div class="input-group">
+                            <label>Description:</label>
+                            <input type="text" id="baselineDescription" placeholder="e.g., Pre-upgrade baseline v1.0.0">
+                        </div>
+                        <div class="input-group">
+                            <label>Tags (comma-separated):</label>
+                            <input type="text" id="baselineTags" placeholder="e.g., v1.0.0, pre-upgrade">
+                        </div>
+                    </div>
+
+                    <!-- Compare Mode Fields -->
+                    <div id="compareFields" class="baseline-section" style="display:none;">
+                        <div class="input-group">
+                            <label>Select Service:</label>
+                            <select id="baselineServiceSelect">
+                                <option value="">-- Select Service --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Select Date:</label>
+                            <select id="baselineDateSelect" disabled>
+                                <option value="">-- Select Date --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Select Run:</label>
+                            <select id="baselineRunSelect" disabled>
+                                <option value="">-- Select Run --</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <form id="configForm">
@@ -51,12 +111,12 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" id="urlRow">
                         <div class="input-group">
                             <label>Endpoint 1 URL</label>
                             <input type="text" id="url1" placeholder="http://api1.example.com/resource" required>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" id="url2Group">
                             <label>Endpoint 2 URL</label>
                             <input type="text" id="url2" placeholder="http://api2.example.com/resource" required>
                         </div>

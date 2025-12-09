@@ -63,6 +63,119 @@ public class ApiUrlComparisonWeb {
             }
         });
 
+        // Baseline API Endpoints
+
+        // Get list of baseline services
+        get("/api/baselines/services", (req, res) -> {
+            res.type("application/json");
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                String storageDir = "baselines";
+
+                // Try to read from config
+                java.io.File configFile = new java.io.File("config.yaml");
+                if (configFile.exists()) {
+                    try {
+                        ObjectMapper yamlMapper = new ObjectMapper(
+                                new com.fasterxml.jackson.dataformat.yaml.YAMLFactory());
+                        Config config = yamlMapper.readValue(configFile, Config.class);
+                        if (config.getBaseline() != null && config.getBaseline().getStorageDir() != null) {
+                            storageDir = config.getBaseline().getStorageDir();
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Could not read storage dir from config, using default", e);
+                    }
+                }
+
+                BaselineStorageService storageService = new BaselineStorageService(storageDir);
+                List<String> services = storageService.listServices();
+                return mapper.writeValueAsString(services);
+            } catch (Exception e) {
+                logger.error("Error fetching baseline services", e);
+                res.status(500);
+                return "{\"error\": \"" + e.getMessage() + "\"}";
+            }
+        });
+
+        // Get list of dates for a service
+        get("/api/baselines/dates/:serviceName", (req, res) -> {
+            res.type("application/json");
+            try {
+                String serviceName = req.params(":serviceName");
+                ObjectMapper mapper = new ObjectMapper();
+                String storageDir = "baselines";
+
+                // Try to read from config
+                java.io.File configFile = new java.io.File("config.yaml");
+                if (configFile.exists()) {
+                    try {
+                        ObjectMapper yamlMapper = new ObjectMapper(
+                                new com.fasterxml.jackson.dataformat.yaml.YAMLFactory());
+                        Config config = yamlMapper.readValue(configFile, Config.class);
+                        if (config.getBaseline() != null && config.getBaseline().getStorageDir() != null) {
+                            storageDir = config.getBaseline().getStorageDir();
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Could not read storage dir from config, using default", e);
+                    }
+                }
+
+                BaselineStorageService storageService = new BaselineStorageService(storageDir);
+                List<String> dates = storageService.listDates(serviceName);
+                return mapper.writeValueAsString(dates);
+            } catch (Exception e) {
+                logger.error("Error fetching baseline dates", e);
+                res.status(500);
+                return "{\"error\": \"" + e.getMessage() + "\"}";
+            }
+        });
+
+        // Get list of runs for a service and date
+        get("/api/baselines/runs/:serviceName/:date", (req, res) -> {
+            res.type("application/json");
+            try {
+                String serviceName = req.params(":serviceName");
+                String date = req.params(":date");
+                ObjectMapper mapper = new ObjectMapper();
+                String storageDir = "baselines";
+
+                // Try to read from config
+                java.io.File configFile = new java.io.File("config.yaml");
+                if (configFile.exists()) {
+                    try {
+                        ObjectMapper yamlMapper = new ObjectMapper(
+                                new com.fasterxml.jackson.dataformat.yaml.YAMLFactory());
+                        Config config = yamlMapper.readValue(configFile, Config.class);
+                        if (config.getBaseline() != null && config.getBaseline().getStorageDir() != null) {
+                            storageDir = config.getBaseline().getStorageDir();
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Could not read storage dir from config, using default", e);
+                    }
+                }
+
+                BaselineStorageService storageService = new BaselineStorageService(storageDir);
+                List<BaselineStorageService.RunInfo> runs = storageService.listRuns(serviceName, date);
+
+                // Convert RunInfo to simple map for JSON response
+                List<java.util.Map<String, Object>> runList = new java.util.ArrayList<>();
+                for (BaselineStorageService.RunInfo run : runs) {
+                    java.util.Map<String, Object> runMap = new java.util.HashMap<>();
+                    runMap.put("runId", run.getRunId());
+                    runMap.put("description", run.getDescription());
+                    runMap.put("tags", run.getTags());
+                    runMap.put("totalIterations", run.getTotalIterations());
+                    runMap.put("timestamp", run.getTimestamp());
+                    runList.add(runMap);
+                }
+                return mapper.writeValueAsString(runList);
+            } catch (Exception e) {
+                logger.error("Error fetching baseline runs", e);
+                res.status(500);
+                return "{\"error\": \"" + e.getMessage() + "\"}";
+            }
+        });
+
         // Ensure server is started
         awaitInitialization();
         logger.info("Server started. Access at http://localhost:{}", port);

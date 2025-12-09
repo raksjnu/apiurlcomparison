@@ -96,7 +96,7 @@ baseline:
   operation: "COMPARE"
   
   # Directory where baselines are stored (can be relative or absolute path)
-  storageDir: "C:\\muleguard-fixed\\tmp\\in\\baselines"
+  storageDir: "baselines"
   
   # Service name (used for folder organization: baselines/{serviceName}/{date}/{run})
   serviceName: "AccountService"
@@ -106,7 +106,7 @@ baseline:
   
   # Tags for easy identification (optional)
   tags:
-    - "v1.0.0"
+    - "raks"
     - "pre-upgrade"
   
   # For COMPARE operation only: specify which baseline to compare against
