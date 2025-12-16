@@ -1,4 +1,4 @@
-package com.myorg.apiurlcomparison;
+package com.raks.apiurlcomparison;
 
 import java.util.List;
 import java.util.Map;

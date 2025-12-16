@@ -1,6 +1,6 @@
-package com.myorg.apiurlcomparison.http;
+package com.raks.apiurlcomparison.http;
 
-import com.myorg.apiurlcomparison.Authentication;
+import com.raks.apiurlcomparison.Authentication;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;

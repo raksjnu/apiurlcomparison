@@ -68,7 +68,7 @@ The GUI will automatically open in your default browser at `http://localhost:456
 Run the built-in mock server to simulate API responses:
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.myorg.apiurlcomparison.MockApiServer"
+mvn compile exec:java -Dexec.mainClass="com.raks.apiurlcomparison.MockApiServer"
 ```
 
 **Quick Start Scripts:**
@@ -416,7 +416,7 @@ This metadata is displayed in:
 ### Basic REST API Comparison
 ```bash
 # 1. Start mock server (optional, for testing)
-mvn compile exec:java -Dexec.mainClass="com.myorg.apiurlcomparison.MockApiServer"
+mvn compile exec:java -Dexec.mainClass="com.raks.apiurlcomparison.MockApiServer"
 
 # 2. Run comparison
 java -jar target/apiurlcomparison-1.0.0.jar --config config.yaml --output ./reports

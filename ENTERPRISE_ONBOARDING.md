@@ -262,7 +262,7 @@ CMD ["java", "-jar", "apiurlcomparison-1.0.0.jar", "--config=config.yaml"]
 ```bash
 # Run as background service
 nohup java -cp apiurlcomparison-1.0.0.jar \
-  com.myorg.apiurlcomparison.ApiUrlComparisonWeb &
+  com.raks.apiurlcomparison.ApiUrlComparisonWeb &
 
 # Access GUI from any workstation
 # http://server-hostname:4567
@@ -489,7 +489,7 @@ For enterprise support inquiries:
 ## Appendix A: Dependency Tree
 
 ```
-com.myorg:apiurlcomparison:1.0.0
+com.raks:apiurlcomparison:1.0.0
 ├── org.yaml:snakeyaml:2.2
 ├── com.fasterxml.jackson.core:jackson-databind:2.15.2
 │   ├── jackson-annotations:2.15.2

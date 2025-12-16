@@ -1,4 +1,4 @@
-package com.myorg.apiurlcomparison;
+package com.raks.apiurlcomparison;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

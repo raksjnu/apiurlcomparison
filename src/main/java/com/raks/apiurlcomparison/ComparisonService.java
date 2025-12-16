@@ -1,6 +1,6 @@
-package com.myorg.apiurlcomparison;
+package com.raks.apiurlcomparison;
 
-import com.myorg.apiurlcomparison.http.ApiClient;
+import com.raks.apiurlcomparison.http.ApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

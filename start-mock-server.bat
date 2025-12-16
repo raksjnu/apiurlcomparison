@@ -10,6 +10,6 @@ echo.
 echo Press Ctrl+C to stop the servers.
 echo.
 
-call mvn compile exec:java -Dexec.mainClass="com.myorg.apiurlcomparison.MockApiServer"
+call mvn compile exec:java -Dexec.mainClass="com.raks.apiurlcomparison.MockApiServer"
 
 pause

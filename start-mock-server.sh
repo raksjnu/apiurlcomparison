@@ -13,7 +13,7 @@ echo "Press Ctrl+C to stop the servers."
 echo ""
 
 # Run the mock server
-mvn compile exec:java -Dexec.mainClass="com.myorg.apiurlcomparison.MockApiServer"
+mvn compile exec:java -Dexec.mainClass="com.raks.apiurlcomparison.MockApiServer"
 
 # Keep the terminal open if there's an error
 if [ $? -ne 0 ]; then
